@@ -53,6 +53,14 @@ export default class Contact extends Component {
 
 	componentDidMount() {
 		
+
+
+		if(process.env.NODE_ENV == 'development') {
+			this.setState({socket : io("http://localhost:3000") });
+		}else{
+			this.setState({socket : io("http://ansolas.de:3000") });
+		}
+
 		self = this;
 		let state = this.state;
 
@@ -70,12 +78,14 @@ export default class Contact extends Component {
 			// ));
 			// this.setState({messages : items});
 			//this.state.socket = io("http://localhost:3000");
-			this.props.socket.emit("join", this.state.username);
+			//this.props.socket.emit("join", this.state.username);
+			this.state.socket.emit("join", this.state.username);
 		}else{
 			console.log("already joint");
 		}
 
-		this.props.socket.on('chat message', function(msg){
+		//this.props.socket.on('chat message', function(msg){
+		this.state.socket.on('chat message', function(msg){
 			var message = Aes.Ctr.decrypt( msg , state.secretKey, state.keySize);
 			console.log('chat message:', state);
 			state.messages.unshift(<li >{ message }</li>);
@@ -91,7 +101,8 @@ export default class Contact extends Component {
 
 		});
 
-		this.props.socket.on('update clientlist', function(clients) {
+		//this.props.socket.on('update clientlist', function(clients) {
+		this.state.socket.on('update clientlist', function(clients) {
 			
 			let items = clients.map( item => (
 	            <li>{ item.username }</li>
@@ -112,7 +123,7 @@ export default class Contact extends Component {
 				console.log(timestamp);
 				let message =  Aes.Ctr.encrypt(timestamp +" | "+state.username + ": "+ e.target.value , state.secretKey, state.keySize);
 				console.log("message: ",message);
-			    this.props.socket.emit('chat message', message );
+			    this.state.socket.emit('chat message', message );
 			 //    //$('#message_input').val('');  YEAH !!! no jQ
 			    e.target.value = "";
 			    return false;

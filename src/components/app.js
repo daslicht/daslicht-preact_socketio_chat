@@ -10,11 +10,9 @@ import Chat from './chat';
 
 export default class App extends Component {
 	
-	host = "http://localhost:3000";
-
-	state = {
-		socket: io("http://localhost:3000")
-	}
+	// state = {
+	// 	socket: io("http://localhost:3000")
+	// }
 	/** Gets fired when the route changes.
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
 	 *	@param {string} event.url	The newly routed URL
@@ -28,13 +26,14 @@ export default class App extends Component {
 	componentWillMount() {
 		//this.setState({socket : io("http://localhost:3000")});
 		
-		if(process.env.NODE_ENV == 'development') {
-			this.setState({socket : "http://localhost:3000" });
-		}else{
-			this.setState({socket : "http://ansolas.de:3000" });
-		}
+		// if(process.env.NODE_ENV == 'development') {
+		// 	this.setState({socket : io("http://localhost:3000") });
+		// }else{
+		// 	this.setState({socket : io("http://ansolas.de:3000") });
+		// }
 		console.log('constructor called', this.state.socket);
 		//this.state.socket.emit("join", this.state.username);
+		//			// <Chat socket={this.state.socket} path="/chat" />
 	}
 	render() {
 		return (
@@ -45,7 +44,8 @@ export default class App extends Component {
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
 					<Contact path="/contact" />
-					<Chat socket={this.state.socket} path="/chat" />
+		
+					<Chat path="/chat" />
 				</Router>
 			</div>
 		);
